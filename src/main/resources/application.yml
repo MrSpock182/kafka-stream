@@ -1,0 +1,34 @@
+server:
+  port : 8081
+
+spring:
+  application:
+    name: kafka-stream
+  main:
+    allow-bean-definition-overriding: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    serialization:
+      write_dates_as_timestamps: false
+  kafka:
+    bootstrap-servers: localhost:29092
+    topics:
+      foo-details: foo-details
+      foo-summary: foo-summary
+    groups:
+      foo-details-group: foo-details-group
+      foo-summary-group: foo-summary-group
+    properties:
+      schema:
+        registry:
+          url: http://0.0.0.0:8085
+    producer:
+      bootstrap-servers: ${spring.kafka.bootstrap-servers}
+      group-id: stream
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+    consumer:
+      bootstrap-servers: ${spring.kafka.bootstrap-servers}
+      group-id: stream
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
